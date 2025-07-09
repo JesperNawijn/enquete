@@ -1,26 +1,48 @@
 {
   "name": "social-media-survey",
   "version": "1.0.0",
-  "description": "Survey application for social media and self-image research",
+  "description": "Anonymous survey application for social media and self-image research",
+  "keywords": [
+    "survey",
+    "social-media",
+    "research",
+    "nodejs",
+    "express",
+    "anonymous"
+  ],
+  "license": "MIT",
+  "author": "Your Name",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js",
-    "dev": "nodemon server.js"
+    "dev": "nodemon server.js",
+    "start": "node server.js"
   },
   "dependencies": {
-    "express": "^4.18.2",
-    "sqlite3": "^5.1.6",
     "bcrypt": "^5.1.1",
-    "express-session": "^1.17.3",
-    "nodemailer": "^6.9.7",
+    "bcryptjs": "latest",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "dotenv": "latest",
     "ejs": "^3.1.9",
-    "json2csv": "^6.0.0-alpha.2",
-    "dotenv": "^16.3.1"
+    "express": "latest",
+    "express-session": "latest",
+    "json2csv": "latest",
+    "lucide-react": "^0.454.0",
+    "next": "15.2.4",
+    "node-gyp": "latest",
+    "path": "latest",
+    "react": "^19",
+    "react-dom": "^19",
+    "sqlite3": "latest",
+    "tailwind-merge": "^2.5.5",
+    "tailwindcss-animate": "^1.0.7"
   },
   "devDependencies": {
-    "nodemon": "^3.0.1"
-  },
-  "keywords": ["survey", "social-media", "research", "nodejs", "express"],
-  "author": "Your Name",
-  "license": "MIT"
+    "@types/node": "^22",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "nodemon": "^3.0.1",
+    "postcss": "^8.5",
+    "typescript": "^5"
+  }
 }

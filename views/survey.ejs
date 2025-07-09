@@ -5,12 +5,71 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><%= title %></title>
     <link rel="stylesheet" href="/css/survey.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            font-weight: bold;
+        }
+        input[type="text"],
+        input[type="email"],
+        textarea,
+        select {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        input[type="radio"] {
+            margin-right: 5px;
+        }
+        .error {
+            color: red;
+        }
+        .range-container {
+            display: flex;
+            align-items: center;
+        }
+
+        .range-numbers {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            margin-top: 5px;
+        }
+
+        .range-labels {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            margin-top: 5px;
+        }
+
+        .range-numbers span {
+            cursor: pointer;
+            padding: 5px;
+        }
+
+        .range-numbers span.active {
+            background-color: #007bff;
+            color: white;
+            border-radius: 5px;
+        }
+    </style>
 </head>
 <body>
     <div class="container">
         <header>
             <h1>Enquête: Sociale Media & Zelfbeeld</h1>
-            <p>Deze enquête onderzoekt de invloed van sociale media op het zelfbeeld van jongeren. Je antwoorden zijn anoniem en worden gebruikt voor onderzoeksdoeleinden.</p>
+            <p>Deze enquête onderzoekt de invloed van sociale media op het zelfbeeld van jongeren. Je antwoorden zijn volledig anoniem en worden gebruikt voor onderzoeksdoeleinden.</p>
         </header>
 
         <% if (error) { %>
@@ -52,7 +111,7 @@
                         <label><input type="radio" name="country" value="Luxemburg" required> Luxemburg</label>
                         <label><input type="radio" name="country" value="Anders" required> Anders</label>
                     </div>
-                    <input type="text" name="country_other" placeholder="Welk land?" class="text-input" style="margin-top: 10px;">
+                    <input type="text" name="country_other" placeholder="Welk land?" class="text-input" style="margin-top: 10px; display: none;">
                 </div>
             </section>
 
@@ -83,7 +142,21 @@
 
                 <div class="form-group">
                     <label for="body_satisfaction">Hoe tevreden ben je met je lichaam? * (1 = zeer ontevreden, 10 = zeer tevreden)</label>
-                    <input type="range" name="body_satisfaction" id="body_satisfaction" min="1" max="10" value="5" required>
+                    <div class="range-container">
+                        <input type="range" name="body_satisfaction" id="body_satisfaction" min="1" max="10" value="5" required>
+                        <div class="range-numbers">
+                            <span>1</span>
+                            <span>2</span>
+                            <span>3</span>
+                            <span>4</span>
+                            <span>5</span>
+                            <span>6</span>
+                            <span>7</span>
+                            <span>8</span>
+                            <span>9</span>
+                            <span>10</span>
+                        </div>
+                    </div>
                     <div class="range-labels">
                         <span>1 (Zeer ontevreden)</span>
                         <span>10 (Zeer tevreden)</span>
@@ -218,7 +291,21 @@
 
                 <div class="form-group">
                     <label for="education_importance">Hoe belangrijk vind je voorlichting over sociale media? * (1 = niet belangrijk, 10 = zeer belangrijk)</label>
-                    <input type="range" name="education_importance" id="education_importance" min="1" max="10" value="5" required>
+                    <div class="range-container">
+                        <input type="range" name="education_importance" id="education_importance" min="1" max="10" value="5" required>
+                        <div class="range-numbers">
+                            <span>1</span>
+                            <span>2</span>
+                            <span>3</span>
+                            <span>4</span>
+                            <span>5</span>
+                            <span>6</span>
+                            <span>7</span>
+                            <span>8</span>
+                            <span>9</span>
+                            <span>10</span>
+                        </div>
+                    </div>
                     <div class="range-labels">
                         <span>1 (Niet belangrijk)</span>
                         <span>10 (Zeer belangrijk)</span>
@@ -227,7 +314,21 @@
 
                 <div class="form-group">
                     <label for="platform_responsibility">In hoeverre zijn sociale media platforms verantwoordelijk voor het welzijn van gebruikers? * (1 = niet verantwoordelijk, 10 = volledig verantwoordelijk)</label>
-                    <input type="range" name="platform_responsibility" id="platform_responsibility" min="1" max="10" value="5" required>
+                    <div class="range-container">
+                        <input type="range" name="platform_responsibility" id="platform_responsibility" min="1" max="10" value="5" required>
+                        <div class="range-numbers">
+                            <span>1</span>
+                            <span>2</span>
+                            <span>3</span>
+                            <span>4</span>
+                            <span>5</span>
+                            <span>6</span>
+                            <span>7</span>
+                            <span>8</span>
+                            <span>9</span>
+                            <span>10</span>
+                        </div>
+                    </div>
                     <div class="range-labels">
                         <span>1 (Niet verantwoordelijk)</span>
                         <span>10 (Volledig verantwoordelijk)</span>
@@ -255,14 +356,35 @@
             });
         });
 
-        // Update range slider values
+        // Update range slider values and highlight active number
         document.querySelectorAll('input[type="range"]').forEach(slider => {
+            const container = slider.closest('.form-group');
+            const numbers = container.querySelectorAll('.range-numbers span');
+            
             const updateValue = () => {
-                const value = slider.value;
+                const value = parseInt(slider.value);
                 slider.setAttribute('data-value', value);
+                
+                // Update active number highlighting
+                numbers.forEach((num, index) => {
+                    if (index + 1 === value) {
+                        num.classList.add('active');
+                    } else {
+                        num.classList.remove('active');
+                    }
+                });
             };
+            
+            // Add click handlers to numbers
+            numbers.forEach((num, index) => {
+                num.addEventListener('click', () => {
+                    slider.value = index + 1;
+                    updateValue();
+                });
+            });
+            
             slider.addEventListener('input', updateValue);
-            updateValue();
+            updateValue(); // Initialize
         });
 
         // Checkbox validation - at least one must be selected

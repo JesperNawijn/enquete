@@ -80,19 +80,6 @@ header p {
   margin-bottom: 8px;
   font-weight: 600;
   color: #2c3e50;
-  position: relative;
-}
-
-.form-group label:after {
-  content: "";
-}
-
-/* Style for required field asterisk */
-label:has(+ .radio-group input[required]),
-label:has(+ select[required]),
-label:has(+ input[required]),
-label:has(+ .checkbox-group input[required]) {
-  position: relative;
 }
 
 .form-group select,
@@ -140,14 +127,19 @@ label:has(+ .checkbox-group input[required]) {
   transform: scale(1.2);
 }
 
+.range-container {
+  position: relative;
+  margin: 10px 0;
+}
+
 input[type="range"] {
   width: 100%;
-  margin: 10px 0;
   -webkit-appearance: none;
   height: 8px;
   border-radius: 4px;
   background: #ddd;
   outline: none;
+  margin-bottom: 5px;
 }
 
 input[type="range"]::-webkit-slider-thumb {
@@ -169,12 +161,41 @@ input[type="range"]::-moz-range-thumb {
   border: none;
 }
 
+.range-numbers {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 5px;
+  padding: 0 10px;
+}
+
+.range-numbers span {
+  font-size: 14px;
+  font-weight: 600;
+  color: #2c3e50;
+  text-align: center;
+  min-width: 20px;
+  cursor: pointer;
+  padding: 2px 4px;
+  border-radius: 3px;
+  transition: background-color 0.2s;
+}
+
+.range-numbers span:hover {
+  background-color: #e8f4f8;
+}
+
+.range-numbers span.active {
+  background-color: #3498db;
+  color: white;
+}
+
 .range-labels {
   display: flex;
   justify-content: space-between;
   font-size: 0.9em;
   color: #666;
-  margin-top: 5px;
+  margin-top: 10px;
+  font-style: italic;
 }
 
 .submit-btn {
@@ -245,55 +266,4 @@ input[type="range"]::-moz-range-thumb {
   .checkbox-group {
     gap: 8px;
   }
-}
-
-/* Range slider value display */
-input[type="range"]::after {
-  content: attr(data-value);
-  position: absolute;
-  top: -30px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: #3498db;
-  color: white;
-  padding: 4px 8px;
-  border-radius: 4px;
-  font-size: 12px;
-}
-
-/* Visual indicator for incomplete required fields */
-.form-group input:invalid,
-.form-group select:invalid {
-  border-color: #e74c3c;
-  box-shadow: 0 0 5px rgba(231, 76, 60, 0.3);
-}
-
-.form-group input:valid,
-.form-group select:valid {
-  border-color: #27ae60;
-}
-
-/* Error styling for checkbox groups */
-.checkbox-group.error,
-.radio-group.error {
-  border: 2px solid #e74c3c;
-  border-radius: 4px;
-  padding: 10px;
-  background-color: #fdf2f2;
-}
-
-/* Required field notice */
-.required-notice {
-  background-color: #e8f4f8;
-  border: 1px solid #3498db;
-  border-radius: 4px;
-  padding: 15px;
-  margin-bottom: 20px;
-  color: #2c3e50;
-  font-weight: 600;
-}
-
-.required-notice::before {
-  content: "ℹ️ ";
-  margin-right: 5px;
 }

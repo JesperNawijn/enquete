@@ -2,9 +2,7 @@ const express = require("express")
 const sqlite3 = require("sqlite3").verbose()
 const bcrypt = require("bcrypt")
 const session = require("express-session")
-const nodemailer = require("nodemailer")
 const path = require("path")
-const fs = require("fs")
 const { Parser } = require("json2csv")
 require("dotenv").config()
 
@@ -67,48 +65,6 @@ db.serialize(() => {
   const hashedPassword = bcrypt.hashSync("admin123", 10)
   db.run(`INSERT OR IGNORE INTO admin_users (username, password) VALUES (?, ?)`, ["admin", hashedPassword])
 })
-
-// Email transporter setup (disabled for now)
-let transporter = null
-if (process.env.EMAIL_USER && process.env.EMAIL_PASS) {
-  transporter = nodemailer.createTransporter({
-    service: "gmail",
-    auth: {
-      user: process.env.EMAIL_USER,
-      pass: process.env.EMAIL_PASS,
-    },
-  })
-  console.log("Email notifications enabled")
-} else {
-  console.log("Email notifications disabled - no email configuration found")
-}
-
-// Helper function to send email notifications
-async function sendNotificationEmail(responseData) {
-  if (!transporter || !process.env.NOTIFICATION_EMAIL) {
-    console.log("Email notification skipped - email not configured")
-    return
-  }
-
-  try {
-    await transporter.sendMail({
-      from: process.env.EMAIL_USER,
-      to: process.env.NOTIFICATION_EMAIL,
-      subject: "Nieuwe enquête inzending - Sociale Media & Zelfbeeld",
-      html: `
-                <h2>Nieuwe enquête inzending ontvangen</h2>
-                <p><strong>Leeftijd:</strong> ${responseData.age}</p>
-                <p><strong>Geslacht:</strong> ${responseData.gender}</p>
-                <p><strong>Land:</strong> ${responseData.country}</p>
-                <p><strong>Tijdstip:</strong> ${new Date().toLocaleString("nl-NL")}</p>
-                <p>Bekijk alle antwoorden in het admin dashboard.</p>
-            `,
-    })
-    console.log("Email notification sent successfully")
-  } catch (error) {
-    console.error("Email notification failed:", error.message)
-  }
-}
 
 // Authentication middleware
 function requireAuth(req, res, next) {
@@ -250,9 +206,7 @@ app.post("/submit", async (req, res) => {
           })
         }
 
-        // Send email notification
-        sendNotificationEmail(req.body)
-
+        console.log("Nieuwe enquête response opgeslagen")
         res.render("thank-you", { title: "Bedankt voor je deelname!" })
       },
     )
