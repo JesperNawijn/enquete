@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+    <link rel="stylesheet" href="/css/admin.css">
+</head>
+<body>
+    <div class="admin-container">
+        <header class="admin-header">
+            <h1>Admin Dashboard</h1>
+            <nav>
+                <a href="/admin/dashboard" class="nav-link active">Dashboard</a>
+                <a href="/admin/statistics" class="nav-link">Statistieken</a>
+                <a href="/admin/export" class="nav-link">Export CSV</a>
+                <a href="/admin/logout" class="nav-link">Uitloggen</a>
+            </nav>
+        </header>
+
+        <div class="admin-content">
+            <div class="stats-summary">
+                <div class="stat-card">
+                    <h3>Totaal Responses</h3>
+                    <p class="stat-number"><%= totalResponses %></p>
+                </div>
+            </div>
+
+            <!-- Filters -->
+            <div class="filters">
+                <h3>Filters</h3>
+                <form method="GET" action="/admin/dashboard" class="filter-form">
+                    <div class="filter-group">
+                        <label for="age">Leeftijd:</label>
+                        <select name="age" id="age">
+                            <option value="">Alle leeftijden</option>
+                            <% for(let i = 12; i <= 18; i++) { %>
+                                <option value="<%= i %>" <%= filters.age == i ? 'selected' : '' %>><%= i %> jaar</option>
+                            <% } %>
+                        </select>
+                    </div>
+
+                    <div class="filter-group">
+                        <label for="gender">Geslacht:</label>
+                        <select name="gender" id="gender">
+                            <option value="">Alle geslachten</option>
+                            <option value="Man" <%= filters.gender === 'Man' ? 'selected' : '' %>>Man</option>
+                            <option value="Vrouw" <%= filters.gender === 'Vrouw' ? 'selected' : '' %>>Vrouw</option>
+                            <option value="Anders" <%= filters.gender === 'Anders' ? 'selected' : '' %>>Anders</option>
+                            <option value="Wil ik niet zeggen" <%= filters.gender === 'Wil ik niet zeggen' ? 'selected' : '' %>>Wil ik niet zeggen</option>
+                        </select>
+                    </div>
+
+                    <div class="filter-group">
+                        <label for="country">Land:</label>
+                        <select name="country" id="country">
+                            <option value="">Alle landen</option>
+                            <option value="Nederland" <%= filters.country === 'Nederland' ? 'selected' : '' %>>Nederland</option>
+                            <option value="België" <%= filters.country === 'België' ? 'selected' : '' %>>België</option>
+                            <option value="Luxemburg" <%= filters.country === 'Luxemburg' ? 'selected' : '' %>>Luxemburg</option>
+                            <option value="Anders" <%= filters.country === 'Anders' ? 'selected' : '' %>>Anders</option>
+                        </select>
+                    </div>
+
+                    <div class="filter-group">
+                        <label for="sort">Sorteren op:</label>
+                        <select name="sort" id="sort">
+                            <option value="created_at" <%= sort.by === 'created_at' ? 'selected' : '' %>>Datum</option>
+                            <option value="age" <%= sort.by === 'age' ? 'selected' : '' %>>Leeftijd</option>
+                            <option value="gender" <%= sort.by === 'gender' ? 'selected' : '' %>>Geslacht</option>
+                            <option value="country" <%= sort.by === 'country' ? 'selected' : '' %>>Land</option>
+                        </select>
+                    </div>
+
+                    <div class="filter-group">
+                        <label for="order">Volgorde:</label>
+                        <select name="order" id="order">
+                            <option value="DESC" <%= sort.order === 'DESC' ? 'selected' : '' %>>Aflopend</option>
+                            <option value="ASC" <%= sort.order === 'ASC' ? 'selected' : '' %>>Oplopend</option>
+                        </select>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">Filter toepassen</button>
+                    <a href="/admin/dashboard" class="btn btn-secondary">Reset filters</a>
+                </form>
+            </div>
+
+            <!-- Responses Table -->
+            <div class="table-container">
+                <table class="responses-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Datum</th>
+                            <th>Leeftijd</th>
+                            <th>Geslacht</th>
+                            <th>Land</th>
+                            <th>Zelfbeeld</th>
+                            <th>SM Uren</th>
+                            <th>Platforms</th>
+                            <th>Acties</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% responses.forEach(response => { %>
+                            <tr>
+                                <td><%= response.id %></td>
+                                <td><%= new Date(response.created_at).toLocaleDateString('nl-NL') %></td>
+                                <td><%= response.age %></td>
+                                <td><%= response.gender %></td>
+                                <td><%= response.country %><%= response.country_other ? ' (' + response.country_other + ')' : '' %></td>
+                                <td><%= response.self_image || '-' %></td>
+                                <td><%= response.social_media_hours || '-' %></td>
+                                <td><%= response.platforms ? response.platforms.substring(0, 30) + '...' : '-' %></td>
+                                <td>
+                                    <button class="btn btn-small" onclick="viewDetails(<%= response.id %>)">Details</button>
+                                </td>
+                            </tr>
+                        <% }); %>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Pagination -->
+            <div class="pagination">
+                <% if (currentPage > 1) { %>
+                    <a href="?page=<%= currentPage - 1 %>&age=<%= filters.age || '' %>&gender=<%= filters.gender || '' %>&country=<%= filters.country || '' %>&sort=<%= sort.by %>&order=<%= sort.order %>" class="btn btn-secondary">Vorige</a>
+                <% } %>
+                
+                <span class="page-info">Pagina <%= currentPage %> van <%= totalPages %></span>
+                
+                <% if (currentPage < totalPages) { %>
+                    <a href="?page=<%= currentPage + 1 %>&age=<%= filters.age || '' %>&gender=<%= filters.gender || '' %>&country=<%= filters.country || '' %>&sort=<%= sort.by %>&order=<%= sort.order %>" class="btn btn-secondary">Volgende</a>
+                <% } %>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for response details -->
+    <div id="detailModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <div id="modalBody"></div>
+        </div>
+    </div>
+
+    <script>
+        function viewDetails(id) {
+            // In a real application, you would fetch the full response details
+            // For now, we'll show a placeholder
+            const modal = document.getElementById('detailModal');
+            const modalBody = document.getElementById('modalBody');
+            
+            modalBody.innerHTML = `
+                <h3>Response Details - ID: ${id}</h3>
+                <p>Volledige response details zouden hier getoond worden...</p>
+            `;
+            
+            modal.style.display = 'block';
+        }
+
+        // Modal close functionality
+        document.querySelector('.close').onclick = function() {
+            document.getElementById('detailModal').style.display = 'none';
+        }
+
+        window.onclick = function(event) {
+            const modal = document.getElementById('detailModal');
+            if (event.target === modal) {
+                modal.style.display = 'none';
+            }
+        }
+    </script>
+</body>
+</html>

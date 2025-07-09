@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+    <link rel="stylesheet" href="/css/survey.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Enquête: Sociale Media & Zelfbeeld</h1>
+            <p>Deze enquête onderzoekt de invloed van sociale media op het zelfbeeld van jongeren. Je antwoorden zijn anoniem en worden gebruikt voor onderzoeksdoeleinden.</p>
+        </header>
+
+        <% if (error) { %>
+            <div class="error-message">
+                <%= error %>
+            </div>
+        <% } %>
+
+        <form method="POST" action="/submit" class="survey-form">
+            <!-- Demografische gegevens -->
+            <section class="form-section">
+                <h2>Over jezelf</h2>
+                
+                <div class="form-group">
+                    <label for="age">Hoe oud ben je? *</label>
+                    <select name="age" id="age" required>
+                        <option value="">Selecteer je leeftijd</option>
+                        <% for(let i = 12; i <= 18; i++) { %>
+                            <option value="<%= i %>"><%= i %> jaar</option>
+                        <% } %>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Wat is je geslacht? *</label>
+                    <div class="radio-group">
+                        <label><input type="radio" name="gender" value="Man" required> Man</label>
+                        <label><input type="radio" name="gender" value="Vrouw" required> Vrouw</label>
+                        <label><input type="radio" name="gender" value="Anders" required> Anders</label>
+                        <label><input type="radio" name="gender" value="Wil ik niet zeggen" required> Wil ik niet zeggen</label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>In welk land woon je? *</label>
+                    <div class="radio-group">
+                        <label><input type="radio" name="country" value="Nederland" required> Nederland</label>
+                        <label><input type="radio" name="country" value="België" required> België</label>
+                        <label><input type="radio" name="country" value="Luxemburg" required> Luxemburg</label>
+                        <label><input type="radio" name="country" value="Anders" required> Anders</label>
+                    </div>
+                    <input type="text" name="country_other" placeholder="Welk land?" class="text-input" style="margin-top: 10px;">
+                </div>
+            </section>
+
+            <!-- Gewicht en zelfbeeld -->
+            <section class="form-section">
+                <h2>Gewicht en zelfbeeld</h2>
+                
+                <div class="form-group">
+                    <label>Heb je wel eens zorgen gehad over je gewicht? *</label>
+                    <div class="radio-group">
+                        <label><input type="radio" name="weight_problems" value="Nooit" required> Nooit</label>
+                        <label><input type="radio" name="weight_problems" value="Soms" required> Soms</label>
+                        <label><input type="radio" name="weight_problems" value="Vaak" required> Vaak</label>
+                        <label><input type="radio" name="weight_problems" value="Altijd" required> Altijd</label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Hoe zou je je zelfbeeld omschrijven? *</label>
+                    <div class="radio-group">
+                        <label><input type="radio" name="self_image" value="Zeer positief" required> Zeer positief</label>
+                        <label><input type="radio" name="self_image" value="Positief" required> Positief</label>
+                        <label><input type="radio" name="self_image" value="Neutraal" required> Neutraal</label>
+                        <label><input type="radio" name="self_image" value="Negatief" required> Negatief</label>
+                        <label><input type="radio" name="self_image" value="Zeer negatief" required> Zeer negatief</label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="body_satisfaction">Hoe tevreden ben je met je lichaam? * (1 = zeer ontevreden, 10 = zeer tevreden)</label>
+                    <input type="range" name="body_satisfaction" id="body_satisfaction" min="1" max="10" value="5" required>
+                    <div class="range-labels">
+                        <span>1 (Zeer ontevreden)</span>
+                        <span>10 (Zeer tevreden)</span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Heeft je gewicht invloed op hoe je je voelt? *</label>
+                    <div class="radio-group">
+                        <label><input type="radio" name="weight_influence" value="Helemaal niet" required> Helemaal niet</label>
+                        <label><input type="radio" name="weight_influence" value="Een beetje" required> Een beetje</label>
+                        <label><input type="radio" name="weight_influence" value="Behoorlijk" required> Behoorlijk</label>
+                        <label><input type="radio" name="weight_influence" value="Heel veel" required> Heel veel</label>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Sociale media gebruik -->
+            <section class="form-section">
+                <h2>Sociale media gebruik</h2>
+                
+                <div class="form-group">
+                    <label for="social_media_hours">Hoeveel uur per dag besteed je gemiddeld aan sociale media? *</label>
+                    <select name="social_media_hours" id="social_media_hours" required>
+                        <option value="">Selecteer aantal uur</option>
+                        <option value="0">Minder dan 1 uur</option>
+                        <option value="1">1-2 uur</option>
+                        <option value="3">3-4 uur</option>
+                        <option value="5">5-6 uur</option>
+                        <option value="7">Meer dan 6 uur</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Welke sociale media platforms gebruik je? * (minimaal één antwoord)</label>
+                    <div class="checkbox-group">
+                        <label><input type="checkbox" name="platforms" value="Instagram"> Instagram</label>
+                        <label><input type="checkbox" name="platforms" value="TikTok"> TikTok</label>
+                        <label><input type="checkbox" name="platforms" value="Snapchat"> Snapchat</label>
+                        <label><input type="checkbox" name="platforms" value="YouTube"> YouTube</label>
+                        <label><input type="checkbox" name="platforms" value="Facebook"> Facebook</label>
+                        <label><input type="checkbox" name="platforms" value="Twitter"> Twitter</label>
+                        <label><input type="checkbox" name="platforms" value="Anders"> Anders</label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Welke soorten content bekijk je het meest? * (minimaal één antwoord)</label>
+                    <div class="checkbox-group">
+                        <label><input type="checkbox" name="content_types" value="Fitness/sport"> Fitness/sport</label>
+                        <label><input type="checkbox" name="content_types" value="Mode/beauty"> Mode/beauty</label>
+                        <label><input type="checkbox" name="content_types" value="Eten/recepten"> Eten/recepten</label>
+                        <label><input type="checkbox" name="content_types" value="Lifestyle"> Lifestyle</label>
+                        <label><input type="checkbox" name="content_types" value="Entertainment"> Entertainment</label>
+                        <label><input type="checkbox" name="content_types" value="Nieuws"> Nieuws</label>
+                        <label><input type="checkbox" name="content_types" value="Vrienden/familie"> Vrienden/familie</label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Hoe vaak vergelijk je jezelf met anderen op sociale media? *</label>
+                    <div class="radio-group">
+                        <label><input type="radio" name="comparison_frequency" value="Nooit" required> Nooit</label>
+                        <label><input type="radio" name="comparison_frequency" value="Zelden" required> Zelden</label>
+                        <label><input type="radio" name="comparison_frequency" value="Soms" required> Soms</label>
+                        <label><input type="radio" name="comparison_frequency" value="Vaak" required> Vaak</label>
+                        <label><input type="radio" name="comparison_frequency" value="Altijd" required> Altijd</label>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Invloed op gedrag -->
+            <section class="form-section">
+                <h2>Invloed op gedrag</h2>
+                
+                <div class="form-group">
+                    <label>Heeft sociale media invloed op je eetgedrag? *</label>
+                    <div class="radio-group">
+                        <label><input type="radio" name="influence_eating" value="Helemaal niet" required> Helemaal niet</label>
+                        <label><input type="radio" name="influence_eating" value="Een beetje" required> Een beetje</label>
+                        <label><input type="radio" name="influence_eating" value="Behoorlijk" required> Behoorlijk</label>
+                        <label><input type="radio" name="influence_eating" value="Heel veel" required> Heel veel</label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Heeft sociale media invloed op je beweeggedrag? *</label>
+                    <div class="radio-group">
+                        <label><input type="radio" name="influence_exercise" value="Helemaal niet" required> Helemaal niet</label>
+                        <label><input type="radio" name="influence_exercise" value="Een beetje" required> Een beetje</label>
+                        <label><input type="radio" name="influence_exercise" value="Behoorlijk" required> Behoorlijk</label>
+                        <label><input type="radio" name="influence_exercise" value="Heel veel" required> Heel veel</label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Heeft sociale media invloed op je schermtijd? *</label>
+                    <div class="radio-group">
+                        <label><input type="radio" name="influence_screen_time" value="Helemaal niet" required> Helemaal niet</label>
+                        <label><input type="radio" name="influence_screen_time" value="Een beetje" required> Een beetje</label>
+                        <label><input type="radio" name="influence_screen_time" value="Behoorlijk" required> Behoorlijk</label>
+                        <label><input type="radio" name="influence_screen_time" value="Heel veel" required> Heel veel</label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Heeft sociale media invloed op je sociale gedrag? *</label>
+                    <div class="radio-group">
+                        <label><input type="radio" name="influence_social" value="Helemaal niet" required> Helemaal niet</label>
+                        <label><input type="radio" name="influence_social" value="Een beetje" required> Een beetje</label>
+                        <label><input type="radio" name="influence_social" value="Behoorlijk" required> Behoorlijk</label>
+                        <label><input type="radio" name="influence_social" value="Heel veel" required> Heel veel</label>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Oplossingen -->
+            <section class="form-section">
+                <h2>Oplossingen en maatregelen</h2>
+                
+                <div class="form-group">
+                    <label>Welke maatregelen zouden volgens jou helpen? * (minimaal één antwoord)</label>
+                    <div class="checkbox-group">
+                        <label><input type="checkbox" name="solutions" value="Meer voorlichting op school"> Meer voorlichting op school</label>
+                        <label><input type="checkbox" name="solutions" value="Strengere regels voor sociale media"> Strengere regels voor sociale media</label>
+                        <label><input type="checkbox" name="solutions" value="Betere filters en rapportage"> Betere filters en rapportage</label>
+                        <label><input type="checkbox" name="solutions" value="Meer positieve rolmodellen"> Meer positieve rolmodellen</label>
+                        <label><input type="checkbox" name="solutions" value="Tijdslimieten op apps"> Tijdslimieten op apps</label>
+                        <label><input type="checkbox" name="solutions" value="Meer offline activiteiten"> Meer offline activiteiten</label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="education_importance">Hoe belangrijk vind je voorlichting over sociale media? * (1 = niet belangrijk, 10 = zeer belangrijk)</label>
+                    <input type="range" name="education_importance" id="education_importance" min="1" max="10" value="5" required>
+                    <div class="range-labels">
+                        <span>1 (Niet belangrijk)</span>
+                        <span>10 (Zeer belangrijk)</span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="platform_responsibility">In hoeverre zijn sociale media platforms verantwoordelijk voor het welzijn van gebruikers? * (1 = niet verantwoordelijk, 10 = volledig verantwoordelijk)</label>
+                    <input type="range" name="platform_responsibility" id="platform_responsibility" min="1" max="10" value="5" required>
+                    <div class="range-labels">
+                        <span>1 (Niet verantwoordelijk)</span>
+                        <span>10 (Volledig verantwoordelijk)</span>
+                    </div>
+                </div>
+            </section>
+
+            <button type="submit" class="submit-btn">Enquête versturen</button>
+        </form>
+    </div>
+
+    <script>
+        // Show/hide country other field
+        document.querySelectorAll('input[name="country"]').forEach(radio => {
+            radio.addEventListener('change', function() {
+                const otherField = document.querySelector('input[name="country_other"]');
+                if (this.value === 'Anders') {
+                    otherField.style.display = 'block';
+                    otherField.required = true;
+                } else {
+                    otherField.style.display = 'none';
+                    otherField.required = false;
+                    otherField.value = '';
+                }
+            });
+        });
+
+        // Update range slider values
+        document.querySelectorAll('input[type="range"]').forEach(slider => {
+            const updateValue = () => {
+                const value = slider.value;
+                slider.setAttribute('data-value', value);
+            };
+            slider.addEventListener('input', updateValue);
+            updateValue();
+        });
+
+        // Checkbox validation - at least one must be selected
+        function validateCheckboxGroups() {
+            const platformsChecked = document.querySelectorAll('input[name="platforms"]:checked').length > 0;
+            const contentTypesChecked = document.querySelectorAll('input[name="content_types"]:checked').length > 0;
+            const solutionsChecked = document.querySelectorAll('input[name="solutions"]:checked').length > 0;
+            
+            if (!platformsChecked) {
+                alert('Selecteer minimaal één social media platform.');
+                return false;
+            }
+            
+            if (!contentTypesChecked) {
+                alert('Selecteer minimaal één type content dat je bekijkt.');
+                return false;
+            }
+            
+            if (!solutionsChecked) {
+                alert('Selecteer minimaal één oplossing/maatregel.');
+                return false;
+            }
+            
+            return true;
+        }
+
+        // Add form submission validation
+        document.querySelector('.survey-form').addEventListener('submit', function(e) {
+            if (!validateCheckboxGroups()) {
+                e.preventDefault();
+                return false;
+            }
+        });
+    </script>
+</body>
+</html>
